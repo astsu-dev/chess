@@ -54,6 +54,21 @@ class Rook(Piece):
     def __init__(self, color: Color, pos: Position) -> None:
         super().__init__(color, pos)
         self._rules = [HorizontalMoveRule(7), VerticalMoveRule(7)]
+        self._was_move = False
+
+    @property
+    def was_move(self) -> bool:
+        return self._was_move
+
+    def move_to(self, pos: Position) -> None:
+        """Sets piece position to `pos`.
+
+        Args:
+            pos (Position): new position
+        """
+
+        super().move_to(pos)
+        self._was_move = True
 
 
 class Knight(Piece):
@@ -127,7 +142,8 @@ class Pawn(Piece):
 
         self.old_pos = self.pos
         super().move_to(pos)
-        if self.pos
+        if self.pos.y - self.old_pos.y == 2:
+            self._remove_double_straight_move_rule()
 
     def _remove_double_straight_move_rule(self) -> None:
         self._rules = [rule for rule in self._rules if isinstance(

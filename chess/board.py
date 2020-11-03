@@ -1,6 +1,7 @@
 from typing import Union
 
 from .cell import Cell
+from .consts import letters_nums, nums
 from .pieces import Piece
 from .position import Position
 
@@ -10,7 +11,7 @@ BoardCell = Union[Piece, Cell]
 class Board:
     def __init__(self) -> None:
         self._board: list[list[BoardCell]] = [
-            [Cell(x=x, y=y) for x in range(8)] for y in range(8)
+            [Cell(x=x, y=y) for x in letters_nums] for y in nums
         ]
 
     def __getitem__(self, y: int) -> list[BoardCell]:
