@@ -2,8 +2,11 @@ from typing import Union
 
 from .cell import Cell
 from .consts import letters_nums, nums
+from .exceptions import PathTypeError
 from .pieces import Piece
 from .position import Position
+from .utils import (is_diagonal_path, is_horizontal_path, is_knight_path,
+                    is_vertical_path)
 
 BoardCell = Union[Piece, Cell]
 
@@ -27,6 +30,27 @@ class Board:
         """
 
         return not bool([bc for bc in roadmap[:-1] if isinstance(bc, Piece)])
+
+    def create_roadmap(self, from_: Position, to: Position) -> list[BoardCell]:
+        """Creates roadmap to `to` positions.
+
+        Args:
+            from_ (Position): from position
+            to (Position): to position
+
+        Returns:
+            list[BoardCell]: roadmap
+        """
+
+        if is_horizontal_path(from_, to):
+            return self.create_horizontal_roadmap(from_, to)
+        if is_vertical_path(from_, to):
+            return self.create_vertical_roadmap(from_, to)
+        if is_diagonal_path(from_, to):
+            return self.create_diagonal_roadmap(from_, to)
+        if is_knight_path(from_, to):
+            return self.create_knight_roadmap(from_, to)
+        raise PathTypeError
 
     def create_horizontal_roadmap(self, from_: Position, to: Position) -> list[BoardCell]:
         """Creates horizontal roadmap to `to` positions.
@@ -88,3 +112,16 @@ class Board:
         roadmap = [self._board[y][x] for x, y in zip(
             range(from_.x, to.x + x_step, x_step), range(from_.y, to.y + y_step, y_step))]
         return roadmap[1:]
+
+    def create_knight_roadmap(self, from_: Position, to: Position) -> list[BoardCell]:
+        """Creates knight roadmap to `to` positions.
+
+        Args:
+            from_ (Position): from position
+            to (Position): to position
+
+        Returns:
+            list[BoardCell]: knight roadmap
+        """
+
+        return [self._board[to.y][to.x]]

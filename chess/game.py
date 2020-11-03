@@ -1,9 +1,11 @@
 from .board import Board
 from .consts import letters_nums, nums
 from .enums import Color
+from .exceptions import NotPieceError, UnpossibleMoveError
 from .pieces import Bishop, King, Knight, Pawn, Piece, Queen, Rook
 from .position import Position
-from .utils import reverse_color
+from .utils import (is_diagonal_path, is_horizontal_path, is_knight_path,
+                    is_vertical_path, reverse_color)
 
 
 class Game:
@@ -16,6 +18,28 @@ class Game:
 
         self._arrange_pieces()
         self._current_move_color = Color.WHITE
+
+    def move(self, from_: Position, to: Position) -> None:
+        board = self._board
+        piece = board[from_.y][from_.x]
+        if not isinstance(piece, Piece):
+            raise NotPieceError(piece)
+        if not piece.color is self._current_move_color:
+            raise InvalidColorError(self._current_move_color)
+        if not piece.can_move_to(to):
+            raise UnpossibleMoveError(piece, to)
+
+        roadmap = board.create_roadmap(from_, to)
+        if board.is_free_roadmap(roadmap):
+            piece.move_to(to)
+            board[from_.y][from_.x] = Cell(
+                from_.x, from_.x)  # Clear old piece pos
+            board[to.y][to.x] = piece
+
+        self._revert_color()
+
+    def _revert_color(self) -> None:
+        self._current_move_color = reverse_color(self._current_move_color)
 
     def _arrange_pieces(self) -> None:
         """Arrange pieces on the board."""

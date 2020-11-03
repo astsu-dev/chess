@@ -38,6 +38,13 @@ class DiagonalMoveRule(MoveRule):
         return num_shift == letter_shift and 0 < num_shift <= max_move_length
 
 
+class KnightMoveRule(MoveRule):
+    def is_valid_path(self, from_: Position, to: Position) -> bool:
+        y_shift = abs(to.y - from_.y)
+        x_shift = abs(to.x - from_.x)
+        return (x_shift == 1 and y_shift == 2) or (x_shift == 2 and y_shift == 1)
+
+
 class PawnStraightMoveRule(MoveRule):
     def __init__(self, max_move_length: int) -> None:
         self._max_move_length = max_move_length
@@ -56,13 +63,6 @@ class PawnBeatMoveRule(MoveRule):
         y_shift = to.y - from_.y
         x_shift = abs(to.x - from_.x)
         return x_shift == y_shift and x_shift == 1
-
-
-class KnightMoveRule(MoveRule):
-    def is_valid_path(self, from_: Position, to: Position) -> bool:
-        y_shift = abs(to.y - from_.y)
-        x_shift = abs(to.x - from_.x)
-        return (x_shift == 1 and y_shift == 2) or (x_shift == 2 and y_shift == 1)
 
 
 class CastlingMoveRule(MoveRule):

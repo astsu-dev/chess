@@ -1,7 +1,6 @@
 import abc
 
 from .enums import Color
-from .exceptions import UnpossibleMoveError
 from .position import Position
 from .rules import (CastlingMoveRule, DiagonalMoveRule, HorizontalMoveRule,
                     KnightMoveRule, MoveRule, PawnBeatMoveRule,
@@ -38,10 +37,7 @@ class Piece(abc.ABC):
             pos (Position): new position
         """
 
-        if self.can_move_to(pos):
-            self.pos = pos
-        else:
-            raise UnpossibleMoveError(f"piece can't move to {pos}")
+        self.pos = pos
 
     def can_move_to(self, pos: Position) -> bool:
         return any((rule.is_valid_path(self.pos, pos) for rule in self._rules))
@@ -50,6 +46,7 @@ class Piece(abc.ABC):
 class Rook(Piece):
     _white_char = "♖"
     _black_char = "♜"
+    _name = "Rook"
 
     def __init__(self, color: Color, pos: Position) -> None:
         super().__init__(color, pos)
@@ -72,6 +69,7 @@ class Rook(Piece):
 
 
 class Knight(Piece):
+    _name = "Knight"
     _white_char = "♘"
     _black_char = "♞"
 
@@ -81,6 +79,7 @@ class Knight(Piece):
 
 
 class Bishop(Piece):
+    _name = "Bishop"
     _white_char = "♗"
     _black_char = "♝"
 
@@ -90,6 +89,7 @@ class Bishop(Piece):
 
 
 class Queen(Piece):
+    _name = "Queen"
     _white_char = "♕"
     _black_char = "♛"
 
@@ -100,6 +100,7 @@ class Queen(Piece):
 
 
 class King(Piece):
+    _name = "King"
     _white_char = "♔"
     _black_char = "♚"
 
@@ -121,10 +122,17 @@ class King(Piece):
         """
 
         super().move_to(pos)
-        self._was_move = True
+        if not self._was_move:
+            self._remove_castling_move_rule()
+            self._was_move = True
+
+    def _remove_castling_move_rule(self) -> None:
+        self._rules = [rule for rule in self._rules if not isinstance(
+            rule, CastlingMoveRule)]
 
 
 class Pawn(Piece):
+    _name = "Pawn"
     _white_char = "♙"
     _black_char = "♟"
 
@@ -132,6 +140,11 @@ class Pawn(Piece):
         super().__init__(color, pos)
         self._rules = [PawnStraightMoveRule(1),
                        PawnStraightMoveRule(2), PawnBeatMoveRule()]
+        self._was_move = False
+
+    @property
+    def was_move(self) -> bool:
+        return self._was_move
 
     def move_to(self, pos: Position) -> None:
         """Sets piece position to `pos`.
@@ -142,8 +155,10 @@ class Pawn(Piece):
 
         self.old_pos = self.pos
         super().move_to(pos)
-        if self.pos.y - self.old_pos.y == 2:
-            self._remove_double_straight_move_rule()
+        if not self._was_move:
+            if self.pos.y - self.old_pos.y == 2:
+                self._remove_double_straight_move_rule()
+            self._was_move = True
 
     def _remove_double_straight_move_rule(self) -> None:
         self._rules = [rule for rule in self._rules if isinstance(

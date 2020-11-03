@@ -44,6 +44,27 @@ def test_create_diagonal_roadmap(board):
     ]
 
 
+def test_create_knight_roadmap(board):
+    assert board.create_knight_roadmap(Position(x=3, y=3), Position(x=1, y=4)) == [
+        Cell(x=1, y=4)
+    ]
+
+
+def test_create_roadmap(board):
+    assert board.create_roadmap(Position(x=5, y=3), Position(x=3, y=3)) == [
+        Cell(x=4, y=3), Cell(x=3, y=3)
+    ]  # horizontal
+    assert board.create_roadmap(Position(x=5, y=3), Position(x=5, y=6)) == [
+        Cell(x=5, y=4), Cell(x=5, y=5), Cell(x=5, y=6)
+    ]  # vertical
+    assert board.create_roadmap(Position(x=3, y=3), Position(x=6, y=6)) == [
+        Cell(x=4, y=4), Cell(x=5, y=5), Cell(x=6, y=6)
+    ]  # diagonal
+    assert board.create_roadmap(Position(x=3, y=3), Position(x=1, y=4)) == [
+        Cell(x=1, y=4)
+    ]  # knight
+
+
 def test_is_free_roadmap(board):
     roadmap = board.create_horizontal_roadmap(
         Position(x=5, y=3), Position(x=3, y=3))

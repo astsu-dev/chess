@@ -1,6 +1,6 @@
 from chess.enums import Color
 from chess.position import Position
-from chess.utils import (is_diagonal_path, is_horizontal_path,
+from chess.utils import (is_diagonal_path, is_horizontal_path, is_knight_path,
                          is_vertical_path, reverse_color)
 
 
@@ -41,6 +41,22 @@ def test_is_diagonal_path():
         Position(x=4, y=4), Position(x=4, y=6))  # vertical
     assert not is_diagonal_path(
         Position(x=4, y=4), Position(x=4, y=2))  # vertical
+
+
+def test_is_knight_path():
+    assert is_knight_path(Position(x=3, y=3), Position(x=4, y=5))
+    assert is_knight_path(Position(x=3, y=3), Position(x=2, y=5))
+    assert is_knight_path(Position(x=3, y=3), Position(x=4, y=1))
+    assert is_knight_path(Position(x=3, y=3), Position(x=2, y=1))
+    assert is_knight_path(Position(x=3, y=3), Position(x=1, y=2))
+    assert is_knight_path(Position(x=3, y=3), Position(x=1, y=4))
+    assert is_knight_path(Position(x=3, y=3), Position(x=5, y=2))
+    assert is_knight_path(Position(x=3, y=3), Position(x=5, y=4))
+    assert not is_knight_path(Position(x=0, y=0), Position(x=1, y=1))
+    assert not is_knight_path(
+        Position(x=0, y=0), Position(x=0, y=0))  # not move
+    assert not is_knight_path(
+        Position(x=3, y=3), Position(x=4, y=6))  # length
 
 
 def test_reverse_color():
