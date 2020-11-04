@@ -1,7 +1,8 @@
 from .board import Board
+from .cell import Cell
 from .consts import letters_nums, nums
 from .enums import Color
-from .exceptions import NotPieceError, UnpossibleMoveError
+from .exceptions import InvalidColorError, NotPieceError, UnpossibleMoveError
 from .pieces import Bishop, King, Knight, Pawn, Piece, Queen, Rook
 from .position import Position
 from .utils import (is_diagonal_path, is_horizontal_path, is_knight_path,

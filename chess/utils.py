@@ -1,3 +1,5 @@
+from typing import Iterator
+
 from .enums import Color
 from .position import Position
 
@@ -85,3 +87,26 @@ def reverse_color(color: Color) -> Color:
     """
 
     return Color.WHITE if color is Color.BLACK else Color.BLACK
+
+
+def only_from_range(num: int, range_: tuple[int, int]) -> int:
+    """
+    Returns down range limit if `num` less than him.
+    Returns up limit if `num` great than him.
+    Otherwise returns `num`.
+
+    Args:
+        num (int)
+        range_ (tuple[int, int]): 1 item - down limit, 2 item - up limit
+
+    Returns:
+        int
+    """
+
+    down_limit = range_[0]
+    up_limit = range_[1]
+    if num < down_limit:
+        return down_limit
+    if num > up_limit:
+        return up_limit
+    return num

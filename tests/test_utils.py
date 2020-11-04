@@ -1,7 +1,7 @@
 from chess.enums import Color
 from chess.position import Position
 from chess.utils import (is_diagonal_path, is_horizontal_path, is_knight_path,
-                         is_vertical_path, reverse_color)
+                         is_vertical_path, only_from_range, reverse_color)
 
 
 def test_is_horizontal_path():
@@ -62,3 +62,10 @@ def test_is_knight_path():
 def test_reverse_color():
     assert reverse_color(Color.WHITE) is Color.BLACK
     assert reverse_color(Color.BLACK) is Color.WHITE
+
+
+def test_only_from_range():
+    assert only_from_range(5, (1, 6)) == 5
+    assert only_from_range(-2, (1, 6)) == 1
+    assert only_from_range(7, (1, 6)) == 6
+    assert only_from_range(6, (1, 6)) == 6
