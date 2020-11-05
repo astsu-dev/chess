@@ -1,5 +1,6 @@
 import abc
 
+from .enums import Color, Direction
 from .position import Position
 from .utils import only_from_range
 
@@ -19,7 +20,6 @@ class MoveRule(abc.ABC):
 
         raise NotImplementedError
 
-    @abc.abstractmethod
     def create_controled_fields_map(self, pos: Position) -> list[Position]:
         """Returns list of positions which piece can beat.
 
@@ -135,21 +135,42 @@ class PawnStraightMoveRule(MoveRule):
 
 
 class PawnBeatMoveRule(MoveRule):
+    def __init__(self, color: Color) -> None:
+        self._color = color
+
     def is_valid_path(self, from_: Position, to: Position) -> bool:
         y_shift = to.y - from_.y
         x_shift = abs(to.x - from_.x)
         return x_shift == y_shift and x_shift == 1
 
     def controled_fields_from_position(self, pos: Position) -> list[Position]:
-        max_move_length = self._max_move_length
-        return [
-            Position(x=only_from_range(pos.x - 1, (0, pos.x)), y=only_from_range(pos.y + 1, (0, pos.x)))
-            Position(x=)]
+        color = self._color
+        if color is Color.BLACK:
+            return [
+                Position(x=only_from_range(pos.x - 1, (0, pos.x)),
+                         y=only_from_range(pos.y + 1, (0, pos.x))),
+                Position(x=only_from_range(pos.x + 1, (pos.x, 7)),
+                         y=only_from_range(pos.y + 1, (0, pos.x)))
+            ]
+        else:
+            return [
+                Position(x=only_from_range(pos.x - 1, (0, pos.x)),
+                         y=only_from_range(pos.y - 1, (0, pos.x))),
+                Position(x=only_from_range(pos.x + 1, (pos.x, 7)),
+                         y=only_from_range(pos.y - 1, (0, pos.x)))
+            ]
 
 
 class CastlingMoveRule(MoveRule):
+    def __init__(self, color: Color) -> None:
+        self._color = color
+
     def is_valid_path(self, from_: Position, to: Position) -> bool:
-        return ((from_.x == 4 and from_.y == 0 and to.x == 6 and to.y == 0) or
-                (from_.x == 4 and from_.y == 0 and to.x == 2 and to.y == 0) or
-                (from_.x == 4 and from_.y == 7 and to.x == 6 and to.y == 7) or
-                (from_.x == 4 and from_.y == 7 and to.x == 2 and to.y == 7))
+        color = self._color
+
+        if color is Color.WHITE:
+            return ((from_.x == 4 and from_.y == 0 and to.x == 6 and to.y == 0) or
+                    (from_.x == 4 and from_.y == 0 and to.x == 2 and to.y == 0))
+        else:
+            return ((from_.x == 4 and from_.y == 7 and to.x == 6 and to.y == 7) or
+                    (from_.x == 4 and from_.y == 7 and to.x == 2 and to.y == 7))

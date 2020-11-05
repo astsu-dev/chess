@@ -49,7 +49,7 @@ def test_pawn_straight_move_rule():
 
 
 def test_pawn_beat_move_rule():
-    rule = PawnBeatMoveRule()
+    rule = PawnBeatMoveRule(Color.WHITE)
     assert rule.is_valid_path(Position(x=0, y=0), Position(x=1, y=1))
     assert rule.is_valid_path(Position(x=1, y=0), Position(x=0, y=1))
     assert rule.is_valid_path(Position(x=0, y=0), Position(x=1, y=1))
