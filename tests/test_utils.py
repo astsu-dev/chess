@@ -1,6 +1,7 @@
 from chess.enums import Color
 from chess.position import Position
-from chess.utils import only_from_range, reverse_color
+from chess.utils import (filter_by_valid_positions, only_from_range,
+                         reverse_color)
 from chess.utils.path import (is_diagonal_path, is_horizontal_path,
                               is_knight_path, is_vertical_path)
 
@@ -70,3 +71,8 @@ def test_only_from_range():
     assert only_from_range(-2, (1, 6)) == 1
     assert only_from_range(7, (1, 6)) == 6
     assert only_from_range(6, (1, 6)) == 6
+
+
+def test_filter_by_valid_positions():
+    assert filter_by_valid_positions([Position(x=1, y=1), Position(x=-1, y=2), Position(x=-1, y=-1), Position(
+        x=3, y=7), Position(x=5, y=10), Position(x=20, y=1), Position(x=20, y=10)]) == [Position(x=1, y=1), Position(x=3, y=7)]
