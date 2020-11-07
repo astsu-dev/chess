@@ -124,9 +124,17 @@ def test_king():
 
 
 def test_pawn():
-    piece = Pawn(Color.BLACK, Position(x=3, y=3))
+    piece = Pawn(Color.WHITE, Position(x=3, y=3))
     assert piece.can_move_to(Position(x=3, y=4))
     assert piece.can_move_to(Position(x=3, y=5))
+    piece.move_to(Position(x=3, y=4))
+    assert not piece.can_move_to(Position(x=3, y=6))
+
+    piece = Pawn(Color.BLACK, Position(x=3, y=3))
+    assert piece.can_move_to(Position(x=3, y=2))
+    assert piece.can_move_to(Position(x=3, y=1))
+    piece.move_to(Position(x=3, y=2))
+    assert not piece.can_move_to(Position(x=3, y=0))
 
     # Knight
     assert not piece.can_move_to(Position(x=4, y=5))

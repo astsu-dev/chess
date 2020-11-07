@@ -5,8 +5,8 @@ from .consts import letters_nums, nums
 from .exceptions import PathTypeError
 from .pieces import Piece
 from .position import Position
-from .utils import (is_diagonal_path, is_horizontal_path, is_knight_path,
-                    is_vertical_path)
+from .utils.path import (is_diagonal_path, is_horizontal_path, is_knight_path,
+                         is_vertical_path)
 
 BoardCell = Union[Piece, Cell]
 

@@ -107,7 +107,7 @@ class King(Piece):
     def __init__(self, color: Color, pos: Position) -> None:
         super().__init__(color, pos)
         self._rules = [HorizontalMoveRule(1),
-                       VerticalMoveRule(1), DiagonalMoveRule(1), CastlingMoveRule()]
+                       VerticalMoveRule(1), DiagonalMoveRule(1), CastlingMoveRule(self._color)]
         self._was_move = False
 
     @property
@@ -138,8 +138,9 @@ class Pawn(Piece):
 
     def __init__(self, color: Color, pos: Position) -> None:
         super().__init__(color, pos)
-        self._rules = [PawnStraightMoveRule(1),
-                       PawnStraightMoveRule(2), PawnBeatMoveRule()]
+        color = self._color
+        self._rules = [PawnStraightMoveRule(1, color),
+                       PawnStraightMoveRule(2, color), PawnBeatMoveRule(color)]
         self._was_move = False
 
     @property
@@ -153,11 +154,9 @@ class Pawn(Piece):
             pos (Position): new position
         """
 
-        self.old_pos = self.pos
         super().move_to(pos)
         if not self._was_move:
-            if self.pos.y - self.old_pos.y == 2:
-                self._remove_double_straight_move_rule()
+            self._remove_double_straight_move_rule()
             self._was_move = True
 
     def _remove_double_straight_move_rule(self) -> None:

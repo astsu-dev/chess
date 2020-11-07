@@ -1,7 +1,8 @@
 from chess.enums import Color
 from chess.position import Position
-from chess.utils import (is_diagonal_path, is_horizontal_path, is_knight_path,
-                         is_vertical_path, only_from_range, reverse_color)
+from chess.utils import only_from_range, reverse_color
+from chess.utils.path import (is_diagonal_path, is_horizontal_path,
+                              is_knight_path, is_vertical_path)
 
 
 def test_is_horizontal_path():
