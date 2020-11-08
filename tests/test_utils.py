@@ -1,6 +1,8 @@
 from chess.enums import Color
 from chess.position import Position
-from chess.utils import (filter_by_valid_positions, only_from_range,
+from chess.utils import (convert_letter_num_to_letter,
+                         convert_letter_to_letter_num,
+                         filter_by_valid_positions, only_from_range,
                          reverse_color)
 from chess.utils.path import (is_diagonal_path, is_horizontal_path,
                               is_knight_path, is_vertical_path)
@@ -76,3 +78,25 @@ def test_only_from_range():
 def test_filter_by_valid_positions():
     assert filter_by_valid_positions([Position(x=1, y=1), Position(x=-1, y=2), Position(x=-1, y=-1), Position(
         x=3, y=7), Position(x=5, y=10), Position(x=20, y=1), Position(x=20, y=10)]) == [Position(x=1, y=1), Position(x=3, y=7)]
+
+
+def test_convert_letter_to_letter_num():
+    assert convert_letter_to_letter_num("a") == 0
+    assert convert_letter_to_letter_num("b") == 1
+    assert convert_letter_to_letter_num("c") == 2
+    assert convert_letter_to_letter_num("d") == 3
+    assert convert_letter_to_letter_num("e") == 4
+    assert convert_letter_to_letter_num("f") == 5
+    assert convert_letter_to_letter_num("g") == 6
+    assert convert_letter_to_letter_num("h") == 7
+
+
+def test_convert_letter_num_to_letter():
+    assert convert_letter_num_to_letter(0) == "a"
+    assert convert_letter_num_to_letter(1) == "b"
+    assert convert_letter_num_to_letter(2) == "c"
+    assert convert_letter_num_to_letter(3) == "d"
+    assert convert_letter_num_to_letter(4) == "e"
+    assert convert_letter_num_to_letter(5) == "f"
+    assert convert_letter_num_to_letter(6) == "g"
+    assert convert_letter_num_to_letter(7) == "h"

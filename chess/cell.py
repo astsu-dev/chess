@@ -1,4 +1,7 @@
+from copy import deepcopy
 from typing import Optional
+
+import termcolor
 
 from .enums import Color
 from .pieces import Piece
@@ -8,8 +11,8 @@ from .position import Position
 class Cell:
     """Board cell."""
 
-    _white_char = "W"
-    _black_char = "B"
+    _white_char = termcolor.colored("x", "white")
+    _black_char = termcolor.colored("x", "grey")
 
     def __init__(self, pos: Position, color: Color) -> None:
         self._pos = pos

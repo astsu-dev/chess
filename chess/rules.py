@@ -20,7 +20,7 @@ class MoveRule(abc.ABC):
 
         raise NotImplementedError
 
-    def controled_fields_from_position(self, pos: Position) -> list[Position]:
+    def controlled_fields_from_position(self, pos: Position) -> list[Position]:
         """Returns list of controled positions from `pos` position.
 
         Args:
@@ -51,7 +51,7 @@ class HorizontalMoveRule(MoveRule):
         max_move_length = self._max_move_length
         return from_.y == to.y and 0 < abs(to.x - from_.x) <= max_move_length
 
-    def controled_fields_from_position(self, pos: Position) -> list[Position]:
+    def controlled_fields_from_position(self, pos: Position) -> list[Position]:
         """Returns list of controled positions from `pos` position.
 
         Args:
@@ -88,7 +88,7 @@ class VerticalMoveRule(MoveRule):
         max_move_length = self._max_move_length
         return from_.x == to.x and 0 < abs(to.y - from_.y) <= max_move_length
 
-    def controled_fields_from_position(self, pos: Position) -> list[Position]:
+    def controlled_fields_from_position(self, pos: Position) -> list[Position]:
         """Returns list of controled positions from `pos` position.
 
         Args:
@@ -127,7 +127,7 @@ class DiagonalMoveRule(MoveRule):
         letter_shift = abs(to.x - from_.x)
         return num_shift == letter_shift and 0 < num_shift <= max_move_length
 
-    def controled_fields_from_position(self, pos: Position) -> list[Position]:
+    def controlled_fields_from_position(self, pos: Position) -> list[Position]:
         """Returns list of controled positions from `pos` position.
 
         Args:
@@ -138,15 +138,15 @@ class DiagonalMoveRule(MoveRule):
         """
 
         fields = [
-            *self._right_and_down_controled_fields_from_position(pos),
-            *self._left_and_down_controled_fields_from_position(pos),
-            *self._right_and_up_controled_fields_from_position(pos),
-            *self._left_and_up_controled_fields_from_position(pos)
+            *self._right_and_down_controlled_fields_from_position(pos),
+            *self._left_and_down_controlled_fields_from_position(pos),
+            *self._right_and_up_controlled_fields_from_position(pos),
+            *self._left_and_up_controlled_fields_from_position(pos)
         ]
 
         return fields
 
-    def _right_and_down_controled_fields_from_position(self, pos: Position) -> list[Position]:
+    def _right_and_down_controlled_fields_from_position(self, pos: Position) -> list[Position]:
         """Returns list of controled positions from in right and in down `pos` position.
 
         Args:
@@ -170,7 +170,7 @@ class DiagonalMoveRule(MoveRule):
 
         return fields
 
-    def _left_and_down_controled_fields_from_position(self, pos: Position) -> list[Position]:
+    def _left_and_down_controlled_fields_from_position(self, pos: Position) -> list[Position]:
         """Returns list of controled positions from in left and in down `pos` position.
 
         Args:
@@ -194,7 +194,7 @@ class DiagonalMoveRule(MoveRule):
 
         return fields
 
-    def _right_and_up_controled_fields_from_position(self, pos: Position) -> list[Position]:
+    def _right_and_up_controlled_fields_from_position(self, pos: Position) -> list[Position]:
         """Returns list of controled positions from in right and in up `pos` position.
 
         Args:
@@ -219,7 +219,7 @@ class DiagonalMoveRule(MoveRule):
 
         return fields
 
-    def _left_and_up_controled_fields_from_position(self, pos: Position) -> list[Position]:
+    def _left_and_up_controlled_fields_from_position(self, pos: Position) -> list[Position]:
         """Returns list of controled positions from in left and in up `pos` position.
 
         Args:
@@ -260,7 +260,7 @@ class KnightMoveRule(MoveRule):
         x_shift = abs(to.x - from_.x)
         return (x_shift == 1 and y_shift == 2) or (x_shift == 2 and y_shift == 1)
 
-    def controled_fields_from_position(self, pos: Position) -> list[Position]:
+    def controlled_fields_from_position(self, pos: Position) -> list[Position]:
         """Returns list of controled positions from `pos` position.
 
         Args:
@@ -337,7 +337,7 @@ class PawnBeatMoveRule(MoveRule):
             return y_shift > 0 and x_shift == y_shift and x_shift == 1
         return y_shift < 0 and x_shift == abs(y_shift) and x_shift == 1
 
-    def controled_fields_from_position(self, pos: Position) -> list[Position]:
+    def controlled_fields_from_position(self, pos: Position) -> list[Position]:
         """Returns list of controled positions from `pos` position.
 
         Args:

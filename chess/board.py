@@ -1,3 +1,4 @@
+from copy import deepcopy
 from typing import Iterator, Union
 
 from .cell import Cell
@@ -6,6 +7,7 @@ from .enums import Color
 from .exceptions import PathTypeError
 from .pieces import Piece
 from .position import Position
+from .utils import convert_letter_num_to_letter
 from .utils.path import (is_diagonal_path, is_horizontal_path, is_knight_path,
                          is_vertical_path)
 
@@ -23,6 +25,17 @@ class Board:
 
     def __iter__(self) -> Iterator[list[Cell]]:
         return iter(self._board)
+
+    def __str__(self) -> str:
+        board = self._board
+        res = ""
+        for num in nums:
+            board_row = " ".join([str(c) for c in board[num]])
+            res += f"{num + 1}  {board_row}\n"
+        letters_row = " ".join(
+            [convert_letter_num_to_letter(letter_num) for letter_num in letters_nums])
+        res += f"\n   {letters_row}\n"
+        return res
 
     def is_free_roadmap(self, roadmap: list[Cell]) -> bool:
         """Returns True if roadmap don't have pieces.

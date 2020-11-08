@@ -1,5 +1,9 @@
 import abc
+from copy import deepcopy
 
+from termcolor import colored
+
+from .consts import BLACK_PIECE_COLOR, WHITE_PIECE_COLOR
 from .enums import Color
 from .position import Position
 from .rules import (CastlingMoveRule, DiagonalMoveRule, HorizontalMoveRule,
@@ -11,24 +15,27 @@ class Piece(abc.ABC):
     _rules: list[MoveRule]
     _white_char: str
     _black_char: str
-    _name: str
+    _name = "Piece"
 
     def __init__(self, color: Color, pos: Position) -> None:
-        self.pos = pos
+        self._pos = pos
         self._color = color
         self._char = self._black_char if self._color is Color.BLACK else self._white_char
-        self._name = "Piece"
         self._rules = []
 
     @property
     def color(self) -> Color:
         return self._color
 
+    @property
+    def pos(self) -> Position:
+        return self._pos
+
     def __str__(self) -> str:
         return self._char
 
     def __repr__(self) -> str:
-        return f"{self._name}(color={self._color}, pos={self.pos})"
+        return f"{self._name}(color={self._color}, pos={self._pos})"
 
     def move_to(self, pos: Position) -> None:
         """Sets piece position to `pos`.
@@ -37,16 +44,39 @@ class Piece(abc.ABC):
             pos (Position): new position
         """
 
-        self.pos = pos
+        self._pos = pos
 
     def can_move_to(self, pos: Position) -> bool:
-        return any((rule.is_valid_path(self.pos, pos) for rule in self._rules))
+        """Returns True if piece can move to `pos` by the her rules.
+
+        Args:
+            pos (Position)
+
+        Returns:
+            bool
+        """
+
+        return any((rule.is_valid_path(self._pos, pos) for rule in self._rules))
+
+    def controlled_fields(self) -> list[Position]:
+        """Returns list of controled positions by piece.
+
+        Returns:
+            list[Position]
+        """
+
+        fields = []
+        for rule in self._rules:
+            fields.extend(rule.controlled_fields_from_position(self._pos))
+        return fields
 
 
 class Rook(Piece):
-    _white_char = "♖"
-    _black_char = "♜"
     _name = "Rook"
+    _white_char = colored("♖", WHITE_PIECE_COLOR)
+    _black_char = colored("♜", BLACK_PIECE_COLOR)
+    _white_char = colored("R", WHITE_PIECE_COLOR)
+    _black_char = colored("R", BLACK_PIECE_COLOR)
 
     def __init__(self, color: Color, pos: Position) -> None:
         super().__init__(color, pos)
@@ -70,8 +100,10 @@ class Rook(Piece):
 
 class Knight(Piece):
     _name = "Knight"
-    _white_char = "♘"
-    _black_char = "♞"
+    _white_char = colored("♘", WHITE_PIECE_COLOR)
+    _black_char = colored("♞", BLACK_PIECE_COLOR)
+    _white_char = colored("N", WHITE_PIECE_COLOR)
+    _black_char = colored("N", BLACK_PIECE_COLOR)
 
     def __init__(self, color: Color, pos: Position) -> None:
         super().__init__(color, pos)
@@ -80,8 +112,10 @@ class Knight(Piece):
 
 class Bishop(Piece):
     _name = "Bishop"
-    _white_char = "♗"
-    _black_char = "♝"
+    _white_char = colored("♗", WHITE_PIECE_COLOR)
+    _black_char = colored("♝", BLACK_PIECE_COLOR)
+    _white_char = colored("B", WHITE_PIECE_COLOR)
+    _black_char = colored("B", BLACK_PIECE_COLOR)
 
     def __init__(self, color: Color, pos: Position) -> None:
         super().__init__(color, pos)
@@ -90,8 +124,10 @@ class Bishop(Piece):
 
 class Queen(Piece):
     _name = "Queen"
-    _white_char = "♕"
-    _black_char = "♛"
+    _white_char = colored("♕", WHITE_PIECE_COLOR)
+    _black_char = colored("♛", BLACK_PIECE_COLOR)
+    _white_char = colored("Q", WHITE_PIECE_COLOR)
+    _black_char = colored("Q", BLACK_PIECE_COLOR)
 
     def __init__(self, color: Color, pos: Position) -> None:
         super().__init__(color, pos)
@@ -101,8 +137,10 @@ class Queen(Piece):
 
 class King(Piece):
     _name = "King"
-    _white_char = "♔"
-    _black_char = "♚"
+    _white_char = colored("♔", WHITE_PIECE_COLOR)
+    _black_char = colored("♚", BLACK_PIECE_COLOR)
+    _white_char = colored("K", WHITE_PIECE_COLOR)
+    _black_char = colored("K", BLACK_PIECE_COLOR)
 
     def __init__(self, color: Color, pos: Position) -> None:
         super().__init__(color, pos)
@@ -133,8 +171,10 @@ class King(Piece):
 
 class Pawn(Piece):
     _name = "Pawn"
-    _white_char = "♙"
-    _black_char = "♟"
+    _white_char = colored("♙", WHITE_PIECE_COLOR)
+    _black_char = colored("♟", BLACK_PIECE_COLOR)
+    _white_char = colored("P", WHITE_PIECE_COLOR)
+    _black_char = colored("P", BLACK_PIECE_COLOR)
 
     def __init__(self, color: Color, pos: Position) -> None:
         super().__init__(color, pos)
