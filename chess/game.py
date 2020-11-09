@@ -68,16 +68,27 @@ class Game:
             board[from_.y][from_.x].remove_piece()
             board[to.y][to.x].put_piece(piece)
             piece.move_to(to)
-            # TODO: check checkmate
         else:
             raise UnpossibleMoveError(piece, to)
 
         self._revert_color()
 
+        # TODO: check checkmate
+        self._check_checkmate(self._current_move_color, )
+
     def _revert_color(self) -> None:
         """Change current move color to reverse color."""
 
         self._current_move_color = reverse_color(self._current_move_color)
+
+    def _check_checkmate(self, color: Color, pieces: list[Piece]) -> None:
+        color = self._current_move_color
+        friendly_pieces_controlled_cells = [
+            cc for cc in self.create_pieces_controlled_cells(pieces) if cc.color is color]
+        king = self._get_king_from_pieces(pieces, color)
+
+    def piece_have_checkmate(self, piece: Piece, friendly_controlled_cells: list[ControlledCell]) -> bool:
+        friendly
 
     def _get_king_from_pieces(self, pieces: list[Piece], king_color: Color) -> King:
         """Returns king with `king_color` from `pieces`.

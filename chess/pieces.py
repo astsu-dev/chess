@@ -75,8 +75,8 @@ class Rook(Piece):
     _name = "Rook"
     _white_char = colored("♖", WHITE_PIECE_COLOR)
     _black_char = colored("♜", BLACK_PIECE_COLOR)
-    _white_char = colored("R", WHITE_PIECE_COLOR)
-    _black_char = colored("R", BLACK_PIECE_COLOR)
+    # _white_char = colored("R", WHITE_PIECE_COLOR)
+    # _black_char = colored("R", BLACK_PIECE_COLOR)
 
     def __init__(self, color: Color, pos: Position) -> None:
         super().__init__(color, pos)
@@ -102,8 +102,8 @@ class Knight(Piece):
     _name = "Knight"
     _white_char = colored("♘", WHITE_PIECE_COLOR)
     _black_char = colored("♞", BLACK_PIECE_COLOR)
-    _white_char = colored("N", WHITE_PIECE_COLOR)
-    _black_char = colored("N", BLACK_PIECE_COLOR)
+    # _white_char = colored("N", WHITE_PIECE_COLOR)
+    # _black_char = colored("N", BLACK_PIECE_COLOR)
 
     def __init__(self, color: Color, pos: Position) -> None:
         super().__init__(color, pos)
@@ -114,8 +114,8 @@ class Bishop(Piece):
     _name = "Bishop"
     _white_char = colored("♗", WHITE_PIECE_COLOR)
     _black_char = colored("♝", BLACK_PIECE_COLOR)
-    _white_char = colored("B", WHITE_PIECE_COLOR)
-    _black_char = colored("B", BLACK_PIECE_COLOR)
+    # _white_char = colored("B", WHITE_PIECE_COLOR)
+    # _black_char = colored("B", BLACK_PIECE_COLOR)
 
     def __init__(self, color: Color, pos: Position) -> None:
         super().__init__(color, pos)
@@ -126,8 +126,8 @@ class Queen(Piece):
     _name = "Queen"
     _white_char = colored("♕", WHITE_PIECE_COLOR)
     _black_char = colored("♛", BLACK_PIECE_COLOR)
-    _white_char = colored("Q", WHITE_PIECE_COLOR)
-    _black_char = colored("Q", BLACK_PIECE_COLOR)
+    # _white_char = colored("Q", WHITE_PIECE_COLOR)
+    # _black_char = colored("Q", BLACK_PIECE_COLOR)
 
     def __init__(self, color: Color, pos: Position) -> None:
         super().__init__(color, pos)
@@ -139,8 +139,8 @@ class King(Piece):
     _name = "King"
     _white_char = colored("♔", WHITE_PIECE_COLOR)
     _black_char = colored("♚", BLACK_PIECE_COLOR)
-    _white_char = colored("K", WHITE_PIECE_COLOR)
-    _black_char = colored("K", BLACK_PIECE_COLOR)
+    # _white_char = colored("K", WHITE_PIECE_COLOR)
+    # _black_char = colored("K", BLACK_PIECE_COLOR)
 
     def __init__(self, color: Color, pos: Position) -> None:
         super().__init__(color, pos)
@@ -173,8 +173,8 @@ class Pawn(Piece):
     _name = "Pawn"
     _white_char = colored("♙", WHITE_PIECE_COLOR)
     _black_char = colored("♟", BLACK_PIECE_COLOR)
-    _white_char = colored("P", WHITE_PIECE_COLOR)
-    _black_char = colored("P", BLACK_PIECE_COLOR)
+    # _white_char = colored("P", WHITE_PIECE_COLOR)
+    # _black_char = colored("P", BLACK_PIECE_COLOR)
 
     def __init__(self, color: Color, pos: Position) -> None:
         super().__init__(color, pos)
