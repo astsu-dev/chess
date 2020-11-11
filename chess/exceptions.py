@@ -79,3 +79,14 @@ class CommandNotExistsError(Exception):
     @property
     def command_name(self) -> str:
         return self._command_name
+
+
+class CheckMate(Exception):
+    """Raises if was checkmate."""
+
+    def __init__(self, color: Color) -> None:
+        self._color = color
+
+    @property
+    def color(self) -> Color:
+        return self._color

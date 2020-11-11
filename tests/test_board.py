@@ -82,13 +82,13 @@ def test_is_free_roadmap(board):
     assert board.is_free_roadmap(roadmap[:-1])
 
     board = Board()
-    board[3][4] = Knight(Color.BLACK, Position(x=4, y=3))
+    board[3][4].put_piece(Knight(Color.BLACK, Position(x=4, y=3)))
     roadmap = board.create_horizontal_roadmap(
         Position(x=5, y=3), Position(x=3, y=3))
     assert not board.is_free_roadmap(roadmap[:-1])
 
     board = Board()
-    board[3][3] = Knight(Color.BLACK, Position(x=3, y=3))
+    board[3][3].put_piece(Knight(Color.BLACK, Position(x=3, y=3)))
     roadmap = board.create_horizontal_roadmap(
         Position(x=5, y=3), Position(x=3, y=3))
     assert board.is_free_roadmap(roadmap[:-1])

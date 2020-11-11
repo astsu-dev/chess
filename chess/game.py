@@ -6,8 +6,8 @@ from .cell import Cell
 from .consts import letters_nums, nums
 from .controlled_cell import ControlledCell
 from .enums import Color
-from .exceptions import (HiddenCheckError, InvalidColorError, NotPieceError,
-                         UnpossibleMoveError)
+from .exceptions import (CheckMate, HiddenCheckError, InvalidColorError,
+                         NotPieceError, UnpossibleMoveError)
 from .pieces import Bishop, King, Knight, Pawn, Piece, Queen, Rook
 from .position import Position
 from .utils import reverse_color
@@ -73,36 +73,49 @@ class Game:
 
         self._revert_color()
 
-        # TODO: check checkmate
-        self._check_checkmate(self._current_move_color, )
+        self._check_checkmate(self._current_move_color)
 
     def _revert_color(self) -> None:
         """Change current move color to reverse color."""
 
         self._current_move_color = reverse_color(self._current_move_color)
 
-    def _check_checkmate(self, color: Color, pieces: list[Piece]) -> None:
-        color = self._current_move_color
+    def _check_checkmate(self, color: Color) -> None:
+        board = self._board
+        pieces_controlled_cells = board.pieces_controlled_cells()
         friendly_pieces_controlled_cells = [
-            cc for cc in self.create_pieces_controlled_cells(pieces) if cc.color is color]
-        king = self._get_king_from_pieces(pieces, color)
+            cc for cc in pieces_controlled_cells if cc.piece.color is color]
 
-    def piece_have_checkmate(self, piece: Piece, friendly_controlled_cells: list[ControlledCell]) -> bool:
-        friendly
+        for controlled_cell in friendly_pieces_controlled_cells:
+            piece_pos = controlled_cell.piece.pos
+            future_board = deepcopy(board)
+            future_piece = typing.cast(
+                Piece, future_board[piece_pos.y][piece_pos.x].piece)
+            future_board[piece_pos.y][piece_pos.x].remove_piece()
+            future_board[controlled_cell.pos.y][controlled_cell.pos.x].put_piece(
+                future_piece)
+            future_piece.move_to(
+                Position(x=controlled_cell.pos.x, y=controlled_cell.pos.y))
+            future_pieces = future_board.get_pieces()
+            future_pieces_controlled_cells = future_board.pieces_controlled_cells()
+            king = self._get_king_from_pieces(future_pieces, color)
+            if not self.piece_can_will_be_beaten(king, future_pieces_controlled_cells):
+                return None
+        raise CheckMate(color)
 
-    def _get_king_from_pieces(self, pieces: list[Piece], king_color: Color) -> King:
-        """Returns king with `king_color` from `pieces`.
+    def _get_king_from_pieces(self, pieces: list[Piece], color: Color) -> King:
+        """Returns king with color as `color` from `pieces`.
 
         Args:
             pieces (list[Piece])
-            king_color (Color)
+            color (Color)
 
         Returns:
             King
         """
 
         kings: list[King] = [p for p in pieces if isinstance(
-            p, King) and p.color is king_color]
+            p, King) and p.color is color]
 
         return kings[0]
 
@@ -123,9 +136,9 @@ class Game:
         future_board[to.y][to.x].put_piece(future_piece)
         future_piece.move_to(to)
 
-        pieces = self._get_pieces_from_board(future_board)
+        pieces = future_board.get_pieces()
         king = self._get_king_from_pieces(pieces, self._current_move_color)
-        controlled_cells = self.create_pieces_controlled_cells(pieces)
+        controlled_cells = future_board.pieces_controlled_cells()
         if self.piece_can_will_be_beaten(king, controlled_cells):
             raise HiddenCheckError
 
@@ -143,7 +156,7 @@ class Game:
         piece_pos = piece.pos
         piece_color = piece.color
         for controlled_cell in controlled_cells:
-            if controlled_cell.pos == piece_pos and controlled_cell.color is not piece_color:
+            if controlled_cell.pos == piece_pos and controlled_cell.piece.color is not piece_color:
                 return True
         return False
 
@@ -152,7 +165,7 @@ class Game:
         for piece in pieces:
             piece_controlled_fields = piece.controlled_fields()
             controlled_cells.extend(
-                [ControlledCell(pos=f, color=piece.color) for f in piece_controlled_fields])
+                [ControlledCell(pos=f, piece=piece) for f in piece_controlled_fields])
         return controlled_cells
 
     def print_pieces(self) -> None:

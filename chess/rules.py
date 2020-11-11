@@ -1,6 +1,7 @@
 import abc
 
 from .enums import Color, Direction
+from .move_path import MovePath
 from .position import Position
 from .utils import filter_by_valid_positions, only_from_range
 

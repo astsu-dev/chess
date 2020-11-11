@@ -6,7 +6,7 @@ from .consts import letters_nums, nums
 from .controlled_cell import ControlledCell
 from .enums import Color
 from .exceptions import PathTypeError
-from .pieces import Piece
+from .pieces import Pawn, Piece
 from .position import Position
 from .utils import convert_letter_num_to_letter
 from .utils.path import (is_diagonal_path, is_horizontal_path, is_knight_path,
@@ -47,7 +47,7 @@ class Board:
             bool
         """
 
-        return not bool([bc for bc in roadmap if isinstance(bc, Piece)])
+        return not bool([c for c in roadmap if c.piece is not None])
 
     def create_roadmap(self, from_: Position, to: Position) -> list[Cell]:
         """Creates roadmap to `to` positions.
@@ -152,10 +152,58 @@ class Board:
         """
 
         pieces = [
-            p for row in self._board for p in row if isinstance(p, Piece)]
+            c.piece for row in self._board for c in row if c.piece is not None]
         return pieces
 
+    def filter_by_valid_pawn_controlled_fields(self, pawn_pos: Position, controlled_fields: list[Position]) -> list[Position]:
+        """Returns pawn list of controlled fields filtered by valid controlled fields.
+
+        Args:
+            pawn_pos (Position)
+            controlled_fields (list[Position])
+
+        Returns:
+            list[Position]
+        """
+
+        res = []
+        for controlled_field in controlled_fields:
+            roadmap = self.create_roadmap(pawn_pos, controlled_field)
+            if controlled_field.x == pawn_pos.x:  # straight move
+                if self.is_free_roadmap(roadmap):
+                    res.append(controlled_field)
+            elif not self.is_free_roadmap(roadmap):  # pawn beats
+                res.append(controlled_field)
+        return res
+
+    def filter_by_valid_piece_controlled_fields(self, piece_pos: Position, controlled_fields: list[Position]) -> list[Position]:
+        """Returns piece list of controlled fields filtered by valid controlled fields.
+
+        Args:
+            piece_pos (Position)
+            controlled_fields (list[Position])
+
+        Returns:
+            list[Position]
+        """
+
+        res = [cf for cf in controlled_fields if self.is_free_roadmap(
+            self.create_roadmap(piece_pos, cf))]
+        return res
+
     def pieces_controlled_cells(self) -> list[ControlledCell]:
+        """Returns list of controlled cells by pieces.
+
+        Returns:
+            list[ControlledCell]: [description]
+        """
+
         pieces = self.get_pieces()
-        pieces_controlled_positions = [p.controlled_fields() for p in pieces]
-        pieces_possible_paths = [p.controlled]
+        pieces_controlled_positions: list[ControlledCell] = []
+        for piece in pieces:
+            controlled_fields = self.filter_by_valid_pawn_controlled_fields(piece.pos, piece.controlled_fields()) if isinstance(
+                piece, Pawn) else self.filter_by_valid_piece_controlled_fields(piece.pos, piece.controlled_fields())
+            controlled_cells = [ControlledCell(
+                pos=cf, piece=piece) for cf in controlled_fields]
+            pieces_controlled_positions.extend(controlled_cells)
+        return pieces_controlled_positions

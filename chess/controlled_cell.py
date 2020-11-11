@@ -1,9 +1,9 @@
 from typing import NamedTuple
 
-from .enums import Color
+from .pieces import Piece
 from .position import Position
 
 
 class ControlledCell(NamedTuple):
     pos: Position
-    color: Color
+    piece: Piece
