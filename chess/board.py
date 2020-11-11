@@ -3,6 +3,7 @@ from typing import Iterator, Union
 
 from .cell import Cell
 from .consts import letters_nums, nums
+from .controlled_cell import ControlledCell
 from .enums import Color
 from .exceptions import PathTypeError
 from .pieces import Piece
@@ -142,3 +143,19 @@ class Board:
         """
 
         return [self._board[to.y][to.x]]
+
+    def get_pieces(self) -> list[Piece]:
+        """Returns list of piece on the board.
+
+        Returns:
+            list[Piece]
+        """
+
+        pieces = [
+            p for row in self._board for p in row if isinstance(p, Piece)]
+        return pieces
+
+    def pieces_controlled_cells(self) -> list[ControlledCell]:
+        pieces = self.get_pieces()
+        pieces_controlled_positions = [p.controlled_fields() for p in pieces]
+        pieces_possible_paths = [p.controlled]
