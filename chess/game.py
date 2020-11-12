@@ -91,7 +91,7 @@ class Game:
             future_board = deepcopy(board)
             future_piece = typing.cast(
                 Piece, future_board[piece_pos.y][piece_pos.x].piece)
-            future_board[piece_pos.y][piece_pos.x].remove_piece()
+            future_board[future_piece.pos.y][future_piece.pos.x].remove_piece()
             future_board[controlled_cell.pos.y][controlled_cell.pos.x].put_piece(
                 future_piece)
             future_piece.move_to(
@@ -159,36 +159,6 @@ class Game:
             if controlled_cell.pos == piece_pos and controlled_cell.piece.color is not piece_color:
                 return True
         return False
-
-    def create_pieces_controlled_cells(self, pieces: list[Piece]) -> list[ControlledCell]:
-        controlled_cells = []
-        for piece in pieces:
-            piece_controlled_fields = piece.controlled_fields()
-            controlled_cells.extend(
-                [ControlledCell(pos=f, piece=piece) for f in piece_controlled_fields])
-        return controlled_cells
-
-    def print_pieces(self) -> None:
-        for row in self._board:
-            print("".join([str(cell) for cell in row]))
-
-    def _get_pieces_from_board(self, board: Board) -> list[Piece]:
-        """Returns list of pieces from `board`.
-
-        Args:
-            board (Board)
-
-        Returns:
-            list[Piece]
-        """
-
-        pieces = []
-        for row in self._board:
-            for cell in row:
-                piece = cell.piece
-                if piece is not None:
-                    pieces.append(piece)
-        return pieces
 
     def _arrange_pieces(self) -> None:
         """Arrange pieces on the board."""
